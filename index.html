@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#d71920">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
+<!--
+  CATATAN: directive "frame-ancestors" di meta CSP diabaikan browser
+  (hanya berlaku via HTTP header, dan GitHub Pages tidak mengizinkan
+  header custom). Proteksi anti-clickjacking dilakukan lewat script
+  frame-busting di bawah.
+-->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  frame-src https://script.google.com https://*.googleusercontent.com;
+  img-src 'self' https: data:;
+  script-src 'self' 'unsafe-inline';
+  style-src 'self' 'unsafe-inline';
+  connect-src 'self' https://script.google.com https://*.googleusercontent.com;
+  base-uri 'none';
+  form-action 'none';
+  object-src 'none';
+">
+
+<title>Ajinomoto Internship & Magang System</title>
+<link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/0/01/Ajinomoto_Group_Global_Brand_logo.png">
+
+<style>
+  html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden;
+    background:#f4f7fb; font-family:'Segoe UI', Arial, sans-serif; }
+
+  iframe { border:none; width:100vw; height:100vh; display:block; background:#f4f7fb; }
+
+  #loader { position:fixed; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:18px; background:#ffffff;
+    z-index:999; transition:opacity .4s ease; }
+  #loader img { width:110px; animation:pulseLogo 1.8s ease-in-out infinite;
+    filter:drop-shadow(0 8px 20px rgba(215,25,32,.18)); }
+  #loader .text { color:#6b7280; font-size:13px; font-weight:700; letter-spacing:.5px; }
+  #loader .ring { width:34px; height:34px; border-radius:50%;
+    border:3px solid rgba(215,25,32,.08); border-top:3px solid #d71920;
+    animation:spin 1s linear infinite; }
+  @keyframes pulseLogo { 0%,100%{transform:scale(1);opacity:.9;} 50%{transform:scale(1.06);opacity:1;} }
+  @keyframes spin { to{ transform:rotate(360deg);} }
+  #loader.hide { opacity:0; pointer-events:none; }
+
+  #errorBox { position:fixed; inset:0; display:none; flex-direction:column;
+    align-items:center; justify-content:center; gap:14px; background:#ffffff;
+    color:#1f2937; text-align:center; padding:24px; z-index:998; }
+  #errorBox img { width:80px; opacity:.9; }
+  #errorBox h2  { margin:0; font-size:18px; }
+  #errorBox p   { margin:0; font-size:13px; color:#6b7280; max-width:420px; line-height:1.6; }
+  #errorBox button { margin-top:8px; padding:10px 22px; border:none; border-radius:12px;
+    background:linear-gradient(135deg,#d71920,#ab1017); color:#fff; font-weight:700;
+    font-size:13px; cursor:pointer; }
+
+  #clickjackWarning { position:fixed; inset:0; background:#050710; color:#fff;
+    display:none; align-items:center; justify-content:center; text-align:center;
+    font-size:13px; z-index:99999; padding:24px; }
+</style>
+</head>
+<body>
+
+<!-- Proteksi anti clickjacking: kalau file ini disisipkan sebagai iframe
+     oleh situs lain, langsung dipaksa keluar ke top-level window. -->
+<div id="clickjackWarning">Mendeteksi upaya penyisipan halaman. Mengalihkan ke sumber resmi&hellip;</div>
+<script>
+  (function () {
+    if (window.top !== window.self) {
+      var w = document.getElementById('clickjackWarning');
+      if (w) w.style.display = 'flex';
+      try {
+        window.top.location.href = window.self.location.href;
+      } catch (e) {
+        document.documentElement.innerHTML =
+          '<body style="background:#050710;color:#fff;font-family:sans-serif;' +
+          'display:flex;align-items:center;justify-content:center;height:100vh;' +
+          'text-align:center;padding:24px;">Halaman ini tidak boleh dibuka di ' +
+          'dalam frame situs lain.</body>';
+        throw new Error('Blocked: possible clickjacking attempt');
+      }
+    }
+  })();
+</script>
+
+<div id="loader">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/0/01/Ajinomoto_Group_Global_Brand_logo.png" alt="Ajinomoto">
+  <div class="ring"></div>
+  <div class="text">MEMUAT SISTEM MAGANG AJINOMOTO&hellip;</div>
+</div>
+
+<div id="errorBox">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/0/01/Ajinomoto_Group_Global_Brand_logo.png" alt="Ajinomoto">
+  <h2>Gagal memuat sistem</h2>
+  <p>Sistem tidak dapat dimuat. Silakan periksa koneksi internet Anda, atau coba muat ulang halaman. Jika masalah berlanjut, hubungi Administrator HR.</p>
+  <button onclick="location.reload()">Muat Ulang</button>
+</div>
+
+<!--
+  Iframe sandbox (minimal privilege) — hanya izinkan yang benar-benar
+  dipakai sistem Anda: script, form, popup export PDF, alert/confirm,
+  download CSV/Excel/PDF, dan navigasi top-level HANYA kalau dipicu
+  klik user (bukan skrip otomatis).
+-->
+<iframe
+  id="appFrame"
+  title="Ajinomoto Internship & Magang System"
+  allow="clipboard-write; geolocation; camera"
+  sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads allow-top-navigation-by-user-activation"
+  referrerpolicy="strict-origin-when-cross-origin"
+></iframe>
+
+<script>
+  /* =====================================================
+     SATU-SATUNYA YANG PERLU ANDA GANTI
+  ===================================================== */
+  const GAS_EXEC_URL = "https://script.google.com/macros/s/AKfycbw2YxkW-EEHaS3HRWNee2Auf25P_9_F8wpZzr8q6W0xU5qS0ancTGLLffC7OZNyIm0CSQ/exec";
+
+  // Cocok dengan hash yang SUDAH ADA di semua link/tombol sistem Anda
+  // (#index, #formmbkm, #formpkl, #absensi, #login, #dashboard) —
+  // tidak perlu ubah satu pun file HTML lain di sistem Anda.
+  const PAGE_MAP = {
+    ''          : 'Landing',
+    'landing'   : 'Landing',
+    'index'     : 'Index',
+    'formmbkm'  : 'FormMBKM',
+    'formpkl'   : 'FormPKL',
+    'absensi'   : 'Absensi',
+    'login'     : 'Login',
+    'dashboard' : 'Dashboard'
+  };
+
+  function isAllowedOrigin(origin) {
+    if (origin === 'https://script.google.com') return true;
+    try {
+      var host = new URL(origin).hostname;
+      return host.slice(-('.googleusercontent.com'.length)) === '.googleusercontent.com';
+    } catch (e) { return false; }
+  }
+
+  const loader   = document.getElementById('loader');
+  const errorBox = document.getElementById('errorBox');
+  const frame    = document.getElementById('appFrame');
+  let fallbackTimer = null;
+  const FALLBACK_TIMEOUT_MS = 25000;
+
+  function getPageFromHash() {
+    const hash = window.location.hash.replace('#', '').toLowerCase();
+    return Object.prototype.hasOwnProperty.call(PAGE_MAP, hash) ? PAGE_MAP[hash] : null;
+  }
+
+  /* =====================================================
+     SECURITY — WAJIB LEWAT LOGIN UNTUK DASHBOARD
+     Halaman "Dashboard" HANYA boleh masuk lewat navigasi dalam sesi
+     yang sama (klik tombol setelah login sukses -> hashchange).
+     Setiap kali wrapper ini di-LOAD ULANG dari nol (refresh, buka tab
+     baru, atau buka link #dashboard langsung dari bookmark/ketik
+     manual), Dashboard TIDAK PERNAH langsung diizinkan -- selalu
+     diarahkan ke Login dulu.
+
+     Catatan: ini proteksi tambahan di sisi wrapper untuk UX/kebiasaan
+     "harus login tiap buka ulang". Proteksi SEBENARNYA tetap ada di
+     server (requireLogin_() di Code.gs Anda) yang menolak semua fungsi
+     data sensitif kalau sesi belum login -- itu tidak berubah dan
+     tidak boleh diandalkan pada bagian ini saja.
+  ===================================================== */
+  const PROTECTED_PAGE = 'Dashboard';
+  const STORAGE_KEY = 'ajinomoto_last_page';
+
+  function resolvePage(isFreshLoad) {
+    const hashPage = getPageFromHash(); // null kalau hash kosong/tidak dikenal
+
+    if (isFreshLoad) {
+      const lastPage = sessionStorage.getItem(STORAGE_KEY);
+      if (hashPage === PROTECTED_PAGE || (!hashPage && lastPage === PROTECTED_PAGE)) {
+        return 'Login';
+      }
+      return hashPage || 'Landing';
+    }
+
+    // Navigasi dalam sesi yang sama (hashchange dari klik tombol) -- izinkan apa adanya.
+    return hashPage || 'Landing';
+  }
+  function showLoader() {
+    errorBox.style.display = 'none';
+    loader.style.display = 'flex';
+    void loader.offsetWidth;
+    loader.classList.remove('hide');
+  }
+  function hideLoader() {
+    errorBox.style.display = 'none';
+    loader.classList.add('hide');
+    setTimeout(() => { if (loader.classList.contains('hide')) loader.style.display = 'none'; }, 400);
+  }
+  function armFallbackTimeout() {
+    clearTimeout(fallbackTimer);
+    fallbackTimer = setTimeout(() => {
+      if (loader.style.display !== 'none') {
+        loader.style.display = 'none';
+        errorBox.style.display = 'flex';
+      }
+    }, FALLBACK_TIMEOUT_MS);
+  }
+  function markAppReady_() { clearTimeout(fallbackTimer); hideLoader(); }
+
+  function loadPage(isFreshLoad) {
+    const page = resolvePage(isFreshLoad);
+
+    // Begitu hash selesai dibaca, langsung bersihkan dari address bar
+    // (tanpa reload/navigasi baru) supaya user SELALU melihat URL polos
+    // "https://hr-dev-sec.github.io/Ajinomoto-Magang-System-Gateway/"
+    // tidak peduli halaman mana yang sedang aktif di dalam iframe.
+    if (window.location.hash) {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+
+    // Ingat halaman aktif untuk sesi tab ini saja (hilang kalau tab/
+    // browser ditutup) -- dipakai resolvePage() saat refresh berikutnya.
+    sessionStorage.setItem(STORAGE_KEY, page);
+
+    showLoader();
+    armFallbackTimeout();
+    frame.src = GAS_EXEC_URL + '?p=' + encodeURIComponent(page);
+  }
+
+  // isFreshLoad = true  -> halaman baru saja dimuat dari nol (buka tab,
+  //                        refresh, atau buka link langsung dari luar)
+  // isFreshLoad = false -> hanya hash yang berubah selagi wrapper ini
+  //                        sudah aktif (klik tombol/link di dalam app)
+  window.addEventListener('DOMContentLoaded', () => loadPage(true));
+  window.addEventListener('hashchange', () => loadPage(false));
+  frame.addEventListener('load', markAppReady_);
+
+  window.addEventListener('message', (e) => {
+    if (!isAllowedOrigin(e.origin)) return;
+    if (!e.data || typeof e.data !== 'object') return;
+    if (e.data.type === 'AJINOMOTO_READY')   markAppReady_();
+    if (e.data.type === 'AJINOMOTO_LOADING') { showLoader(); armFallbackTimeout(); }
+  });
+</script>
+
+</body>
+</html>
